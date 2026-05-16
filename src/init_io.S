@@ -1,17 +1,7 @@
 #define __SFR_OFFSET 0x00
 #include "avr/io.h"
 
-;===============================================================================
-; init_io.S - I/O Port and Interrupt Initialization
-;
-; Configures all GPIO directions and initial states, then sets up external
-; interrupt INT0 (RFID IRQ on PD2) and disables PCINT2 until needed.
-;
-; Public subroutines:
-;   init_io         - Configure DDRB / DDRC / DDRD and initial port states
-;   init_interrupts - INT0 falling-edge + PCINT2 disabled
-;===============================================================================
-
+; --- Hardware Pins ---
 .equ LED_GREEN,  0          ; PB0
 .equ LED_RED,    1          ; PB1
 .equ RFID_SS,    2          ; PB2
@@ -31,43 +21,39 @@
 .global init_io
 .global init_interrupts
 
-;===============================================================================
-; init_io
-;===============================================================================
+; --- Initialize GPIO Pins ---
 init_io:
-    ; PORTB: PB0 (green LED), PB1 (red LED), PB2 (SS), PB3 (MOSI), PB5 (SCK) output
+    ; Config outputs for LEDs and SPI pins
     LDI   R16, (1<<LED_GREEN)|(1<<LED_RED)|(1<<RFID_SS)|(1<<SPI_MOSI)|(1<<SPI_SCK)
     OUT   DDRB, R16
-    ; SS deselected, LEDs off
+    ; Turn off LEDs and deselect RFID SS
     SBI   PORTB, RFID_SS
     CBI   PORTB, LED_GREEN
     CBI   PORTB, LED_RED
-    ; PORTC: PC0-PC3 output (keypad cols), PC4-PC5 input (slide switches)
+    ; Config keypad columns as output
     LDI   R16, (1<<KP_COL1)|(1<<KP_COL2)|(1<<KP_COL3)|(1<<KP_COL4)
     OUT   DDRC, R16
-    ; All columns HIGH initially; enable pull-ups on PC4-PC5
+    ; Pull up all Port C pins (switches and columns)
     LDI   R16, 0xFF
     OUT   PORTC, R16
-    ; PORTD: PD3 output (buzzer); PD2 input (INT0/RFID IRQ); PD4-PD7 input (keypad rows)
+    ; Config buzzer pin as output
     LDI   R16, (1<<BUZZER_PIN)
     OUT   DDRD, R16
-    ; Pull-ups on keypad rows; buzzer off
+    ; Pull up keypad rows and turn buzzer off
     LDI   R16, (1<<KP_ROW1)|(1<<KP_ROW2)|(1<<KP_ROW3)|(1<<KP_ROW4)
     OUT   PORTD, R16
     CBI   PORTD, BUZZER_PIN
     RET
 
-;===============================================================================
-; init_interrupts
-;===============================================================================
+; --- Initialize INT0 and Disable PCINT2 ---
 init_interrupts:
-    ; INT0: falling edge (ISC01=1, ISC00=0)
+    ; Set INT0 to trigger on falling edge
     LDI   R16, (1<<ISC01)
     STS   EICRA, R16
-    ; Enable INT0
+    ; Enable INT0 external interrupt
     LDI   R16, (1<<INT0)
     OUT   EIMSK, R16
-    ; PCINT2 disabled until keypad_enable is called
+    ; Disable pin change interrupts for now
     LDI   R16, 0x00
     STS   PCICR, R16
     RET
