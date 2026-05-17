@@ -122,5 +122,4 @@ fb_overdue_loop:
     RCALL delay_500ms
     DEC   R16
     BRNE  fb_overdue_loop
-    SBI   PORTB, LED_RED
     RET
