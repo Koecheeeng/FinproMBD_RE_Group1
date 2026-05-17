@@ -1,0 +1,105 @@
+{
+  "version": 1,
+  "author": "Group 1",
+  "editor": "wokwi",
+  "parts": [
+    { "type": "wokwi-arduino-uno", "id": "uno", "top": 0.6, "left": 9, "attrs": {} },
+    {
+      "type": "board-mfrc522",
+      "id": "rfid",
+      "top": -250,
+      "left": 150,
+      "attrs": { "uid": "A1:B2:C3:D4" }
+    },
+    {
+      "type": "wokwi-membrane-keypad",
+      "id": "keypad",
+      "top": 250,
+      "left": -250,
+      "attrs": { "columns": "4", "rows": "4" }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "led_green",
+      "top": -120,
+      "left": -100,
+      "attrs": { "color": "green" }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "led_red",
+      "top": -120,
+      "left": -50,
+      "attrs": { "color": "red" }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "r_green",
+      "top": -60,
+      "left": -100,
+      "attrs": { "resistance": "220" }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "r_red",
+      "top": -53.65,
+      "left": -28.8,
+      "attrs": { "resistance": "220" }
+    },
+    { "type": "wokwi-buzzer", "id": "buzzer", "top": -120, "left": -200, "attrs": {} },
+    { "type": "wokwi-slide-switch", "id": "ir1", "top": 186.8, "left": 300.7, "attrs": {} },
+    { "type": "wokwi-slide-switch", "id": "ir2", "top": 240, "left": 300, "attrs": {} },
+    {
+      "type": "wokwi-slide-switch",
+      "id": "ir3",
+      "top": 280,
+      "left": 300,
+      "attrs": { "comment": "Slot 3 - shares pin with keypad in full build" }
+    },
+    {
+      "type": "wokwi-slide-switch",
+      "id": "ir4",
+      "top": 330.8,
+      "left": 310.3,
+      "attrs": { "comment": "Slot 4 - shares pin with keypad in full build" }
+    }
+  ],
+  "connections": [
+    [ "rfid:SDA", "uno:10", "blue", [] ],
+    [ "rfid:SCK", "uno:13", "yellow", [] ],
+    [ "rfid:MOSI", "uno:11", "orange", [] ],
+    [ "rfid:MISO", "uno:12", "green", [] ],
+    [ "rfid:GND", "uno:GND.1", "black", [] ],
+    [ "rfid:VCC", "uno:3.3V", "red", [] ],
+    [ "rfid:RST", "uno:2", "red", [] ],
+    [ "rfid:3.3V", "uno:3.3V", "green", [ "h0" ] ],
+    [ "keypad:C1", "uno:A0", "orange", [ "v93.6", "h265.1", "v-470.4", "h67.2", "v-19.1" ] ],
+    [ "keypad:C2", "uno:A1", "orange", [ "v74.4", "h332.4", "v-470.3" ] ],
+    [ "keypad:C3", "uno:A2", "orange", [ "v55.2", "h332.25", "v-451.1" ] ],
+    [ "keypad:C4", "uno:A3", "orange", [ "v45.6", "h332.1", "v-441.5" ] ],
+    [ "keypad:R1", "uno:4", "purple", [ "v36", "h376.5" ] ],
+    [ "keypad:R2", "uno:5", "purple", [ "v16.8", "h357" ] ],
+    [ "keypad:R3", "uno:6", "purple", [ "v7.2", "h338" ] ],
+    [ "keypad:R4", "uno:7", "purple", [ "v26.4", "h319" ] ],
+    [ "uno:8", "r_green:1", "green", [] ],
+    [ "r_green:2", "led_green:A", "green", [ "h2.8", "v-23.65" ] ],
+    [ "led_green:C", "uno:GND.1", "black", [ "v58.8", "h200.5" ] ],
+    [ "uno:9", "r_red:1", "red", [ "v-9.6", "h-200.8" ] ],
+    [ "r_red:2", "led_red:A", "red", [ "h29.6", "v-23.65" ] ],
+    [ "led_red:C", "uno:GND.1", "black", [ "v10.8", "h150.5" ] ],
+    [ "uno:3", "buzzer:1", "orange", [ "v10.2", "h-400" ] ],
+    [ "buzzer:2", "uno:GND.1", "black", [] ],
+    [ "ir1:2", "uno:A4", "brown", [ "v9.6", "h-61.7" ] ],
+    [ "ir1:3", "uno:GND.2", "black", [ "v6", "h-147" ] ],
+    [ "ir1:1", "uno:5V", "red", [] ],
+    [ "ir2:2", "uno:A5", "brown", [] ],
+    [ "ir2:3", "uno:GND.2", "black", [ "v4.4", "h-147" ] ],
+    [ "ir2:1", "uno:5V", "red", [ "v14", "h-137.5" ] ],
+    [ "ir3:3", "uno:GND.2", "black", [ "v2.8", "h-147" ] ],
+    [ "ir3:1", "uno:5V", "red", [ "v12.4", "h-137.5" ] ],
+    [ "ir4:3", "uno:GND.2", "black", [ "v9.6", "h-157.3" ] ],
+    [ "ir4:1", "uno:5V", "red", [] ]
+  ],
+  "serialMonitor": { "display": "auto", "newline": "lf" },
+  "dependencies": {}
+}
